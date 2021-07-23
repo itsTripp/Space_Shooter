@@ -1088,6 +1088,8 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
+  - component: {fileID: 963194231}
+  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1220,6 +1222,38 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!95 &963194230
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 516dec85b2164ce409599654d70128cc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &963194231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be9d7e3ef3c336246ad3eff393aa0459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camAnim: {fileID: 963194230}
 --- !u!1 &1040544717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1440,8 +1474,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e15a69921665114db77a2e61f721faf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentSpeed: 0
   _speed: 5
   _speedMultiplier: 2
+  _thrusterSpeed: 8
   _laserPrefab: {fileID: 1596263760442722714, guid: 8b36081e4bf5a1944bcfc0d03d89cc54, type: 3}
   _tripleShotPrefab: {fileID: 177243978254304280, guid: 9a1d7212ff0b2854b9785d36fe11c767, type: 3}
   _shieldPrefab: {fileID: 328139318}

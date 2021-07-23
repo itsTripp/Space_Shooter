@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     private AudioSource _audioSource;
     [SerializeField]
     private AudioClip _laserAudio;
+    private Camera_Shake _shake;
 
 
 
@@ -48,6 +49,7 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _audioSource = GetComponent<AudioSource>();
+        _shake = GameObject.Find("Main Camera").GetComponent<Camera_Shake>();
 
         if(_spawnManager == null)
         {
@@ -66,6 +68,11 @@ public class Player : MonoBehaviour
         else
         {
             _audioSource.clip = _laserAudio;
+        }
+
+        if(_shake == null)
+        {
+            Debug.LogError("The Camera Shake is null");
         }
 
         _rightEngine.SetActive(false);
@@ -140,6 +147,7 @@ public class Player : MonoBehaviour
             return;
         }
         _lives -= 1;
+        _shake.CameraShake();
 
         if (_lives == 2)
         {
