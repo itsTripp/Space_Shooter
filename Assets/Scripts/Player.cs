@@ -5,9 +5,13 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed;
+    private float _currentSpeed;
+    [SerializeField]
+    private float _speed = 5;
     [SerializeField]
     private float _speedMultiplier = 2;
+    [SerializeField]
+    private float _thrusterSpeed = 8;    
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
@@ -39,6 +43,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _currentSpeed = _speed;
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
@@ -70,6 +75,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         CalculateMovement();
 
         if(Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
@@ -85,7 +91,7 @@ public class Player : MonoBehaviour
         
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
         
-        transform.Translate(direction * _speed * Time.deltaTime);
+        transform.Translate(direction * _currentSpeed * Time.deltaTime);
         
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
@@ -97,6 +103,16 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(11.3f, transform.position.y, 0);
         }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _currentSpeed = _thrusterSpeed;
+        }
+        else 
+        {
+            _currentSpeed = _speed;
+        }
+        
     }
 
     void ShootLaser()
@@ -163,14 +179,14 @@ public class Player : MonoBehaviour
     public void SpeedBoostActive()
     {
         _isSpeedBoostActive = true;
-        _speed *= _speedMultiplier;
+        _currentSpeed *= _speedMultiplier;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
     IEnumerator SpeedBoostPowerDownRoutine()
     {
         yield return new WaitForSeconds(5f);
         _isSpeedBoostActive = false;
-        _speed /= _speedMultiplier;
+        _currentSpeed /= _speedMultiplier;
     }
 
     public void AddScore(int points)
