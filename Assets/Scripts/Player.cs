@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("Speeds")]
     [SerializeField]
     private float _currentSpeed;
     [SerializeField]
@@ -11,25 +12,38 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speedMultiplier = 2;
     [SerializeField]
-    private float _thrusterSpeed = 8;    
+    private float _thrusterSpeed = 8;  
+    
+    [Header("Powerups")]
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleShotPrefab;
     [SerializeField]
     private GameObject _shieldPrefab;
+    [SerializeField]
+    private SpriteRenderer _shieldRenderer;
+    [SerializeField]
+    private int _shieldStrength = 3;
+
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
     private bool _isShieldsActive = false;
+
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
+
+    [Header("UI Elements")]
     [SerializeField]
     private int _lives = 3;
+
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
     [SerializeField]
     private int _score;
+
+    [Header("Player Visuals")]
     [SerializeField]
     private GameObject _rightEngine;
     [SerializeField]
@@ -141,11 +155,30 @@ public class Player : MonoBehaviour
     public void Damage()
     {
         if(_isShieldsActive == true)
-        {         
-            _isShieldsActive = false;
-            _shieldPrefab.SetActive(false);
+        {
+            _shieldStrength -= 1;
+
+            switch (_shieldStrength)
+            {
+                case 0:
+                    _isShieldsActive = false;
+                    _shieldPrefab.SetActive(false);
+                    _shieldRenderer.color = Color.cyan;
+                    break;
+
+                case 1:
+                    _shieldRenderer.color = Color.red;
+                    break;
+
+                case 2:
+                    _shieldRenderer.color = Color.yellow;
+                    break;
+
+            }
+            
             return;
         }
+
         _lives -= 1;
         _shake.CameraShake();
 
@@ -171,7 +204,8 @@ public class Player : MonoBehaviour
     public void ShieldActive()
     {
         _isShieldsActive = true;
-        _shieldPrefab.SetActive(true);        
+        _shieldPrefab.SetActive(true);
+        _shieldStrength = 3;
     }
 
     public void TripleShotActive()
