@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text _scoreText;
     [SerializeField]
+    private Text _ammoText;
+    [SerializeField]
     private Image _livesImg;
     [SerializeField]
     private Sprite[] _liveSprites;
@@ -68,6 +70,20 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             _gameOverText.text = "";
             yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    public void UpdateAmmoCount(int ammoCount, int maximumAmmo)
+    {
+        _ammoText.text = "Ammo: " + ammoCount + " / " + maximumAmmo;
+
+        if(ammoCount == 0)
+        {
+            _ammoText.color = Color.red;
+        }
+        else
+        {
+            _ammoText.color = Color.white;
         }
     }
 }

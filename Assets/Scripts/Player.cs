@@ -29,10 +29,15 @@ public class Player : MonoBehaviour
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
     private bool _isShieldsActive = false;
+    [SerializeField]
+    private bool _canPlayerShoot = true;
 
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
+    [SerializeField]
+    private int _ammoCount = 15;
+    private int _maximumAmmo;
 
     [Header("UI Elements")]
     [SerializeField]
@@ -59,6 +64,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         _currentSpeed = _speed;
+        _maximumAmmo = _ammoCount;
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
@@ -138,18 +144,29 @@ public class Player : MonoBehaviour
 
     void ShootLaser()
     {
-        _canFire = Time.time + _fireRate;
-        
-        if(_isTripleShotActive == true)
+        if (_ammoCount > 0)
         {
-            Instantiate(_tripleShotPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            _canPlayerShoot = true;
+            _canFire = Time.time + _fireRate;
+
+            if (_isTripleShotActive == true)
+            {
+                Instantiate(_tripleShotPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            }
+
+            _audioSource.Play();
+            _ammoCount--;
+            _uiManager.UpdateAmmoCount(_ammoCount, _maximumAmmo);
         }
         else
         {
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            _canPlayerShoot = false;
         }
-
-        _audioSource.Play();
+        
     }
 
     public void Damage()
