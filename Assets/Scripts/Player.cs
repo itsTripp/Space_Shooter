@@ -236,5 +236,14 @@ public class Player : MonoBehaviour
         _score += points;
         _uiManager.UpdateScore(_score);
     }
+
+    public void AddHealth()
+    {
+        if(_lives >= 2)
+        {
+            _lives++;
+            _uiManager.UpdateLives(_lives);
+        }
+    }
     
 }
