@@ -1564,6 +1564,7 @@ MonoBehaviour:
   _shieldPrefab: {fileID: 328139318}
   _shieldRenderer: {fileID: 328139322}
   _shieldStrength: 3
+  _canPlayerShoot: 1
   _fireRate: 0.15
   _ammoCount: 15
   _lives: 3
@@ -1799,6 +1800,7 @@ MonoBehaviour:
   - {fileID: 7869003003385026334, guid: 569f52c5d3098bd4fb7bf5dd023976d8, type: 3}
   - {fileID: 4454377600331202970, guid: 058c7136fb56bba4b8f0f9e43af31d70, type: 3}
   - {fileID: 6097705149335278526, guid: 79189ec5f9863b34ca948b9c59f018ae, type: 3}
+  - {fileID: 6276463265011597439, guid: f7d8c430c4e934c489c799ce8d446741, type: 3}
 --- !u!4 &1690596795
 Transform:
   m_ObjectHideFlags: 0
