@@ -12,13 +12,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speedMultiplier = 2;
     [SerializeField]
-    private float _thrusterSpeed = 8;  
+    private float _thrusterSpeed = 3;  
     
     [Header("Powerups")]
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleShotPrefab;
+    [SerializeField]
+    private GameObject _sprayShotPrefab;
     [SerializeField]
     private GameObject _shieldPrefab;
     [SerializeField]
@@ -27,9 +29,10 @@ public class Player : MonoBehaviour
     private int _shieldStrength = 3;
 
     private bool _isTripleShotActive = false;
+    private bool _isSprayShotActive = false;
+    [SerializeField]
     private bool _isSpeedBoostActive = false;
     private bool _isShieldsActive = false;
-    [SerializeField]
     private bool _canPlayerShoot = true;
 
     [SerializeField]
@@ -104,6 +107,7 @@ public class Player : MonoBehaviour
     {
         
         CalculateMovement();
+        Thrusters();
 
         if(Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
@@ -130,16 +134,18 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(11.3f, transform.position.y, 0);
         }
+    }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+    private void Thrusters()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            _currentSpeed = _thrusterSpeed;
+            _currentSpeed += _thrusterSpeed;
         }
-        else 
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            _currentSpeed = _speed;
+            _currentSpeed -= _thrusterSpeed;
         }
-        
     }
 
     void ShootLaser()
@@ -151,7 +157,13 @@ public class Player : MonoBehaviour
 
             if (_isTripleShotActive == true)
             {
+                _isSprayShotActive = false;
                 Instantiate(_tripleShotPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            }
+            else if (_isSprayShotActive == true)
+            {
+                _isTripleShotActive = false;
+                Instantiate(_sprayShotPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
             }
             else
             {
@@ -235,17 +247,28 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5f);
         _isTripleShotActive = false;
     }
+    public void SprayShotActive()
+    {
+        _isSprayShotActive = true;
+        StartCoroutine(SprayShotPowerDownRoutine());
+    }
+
+    IEnumerator SprayShotPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        _isSprayShotActive = false;
+    }
     public void SpeedBoostActive()
     {
         _isSpeedBoostActive = true;
-        _currentSpeed *= _speedMultiplier;
+        _currentSpeed *=  _speedMultiplier;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
     IEnumerator SpeedBoostPowerDownRoutine()
     {
         yield return new WaitForSeconds(5f);
         _isSpeedBoostActive = false;
-        _currentSpeed /= _speedMultiplier;
+        _currentSpeed /=  _speedMultiplier;
     }
 
     public void AddScore(int points)
