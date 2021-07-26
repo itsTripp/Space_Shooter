@@ -16,11 +16,16 @@ public class UIManager : MonoBehaviour
     private Text _gameOverText;
     [SerializeField]
     private Text _restartLevelText;
+    [SerializeField]
+    private Slider _thrusterSlider;
+    public float maxFuel = 100f;
+    public float currentFuel;
     private GameManager _gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        currentFuel = maxFuel;
         _scoreText.text = "Score: " + 0;
         _gameOverText.gameObject.SetActive(false);
         _restartLevelText.gameObject.SetActive(false);
@@ -35,7 +40,7 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        _thrusterSlider.value = currentFuel / maxFuel;
     }
 
     public void UpdateScore(int playerScore)

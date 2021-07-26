@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speedMultiplier = 2;
     [SerializeField]
-    private float _thrusterSpeed = 3;  
+    private float _thrusterSpeed = 8;  
     
     [Header("Powerups")]
     [SerializeField]
@@ -30,7 +30,6 @@ public class Player : MonoBehaviour
 
     private bool _isTripleShotActive = false;
     private bool _isSprayShotActive = false;
-    [SerializeField]
     private bool _isSpeedBoostActive = false;
     private bool _isShieldsActive = false;
     private bool _canPlayerShoot = true;
@@ -50,6 +49,14 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
     [SerializeField]
     private int _score;
+
+    [SerializeField]
+    private float _fuelBurnRate = 30f;
+    [SerializeField]
+    private float _fuelRefillRate = 20f;
+    [SerializeField]
+    private float _thrusterRefillCoolDown = 2f;
+    private float _canRefillThrust;
 
     [Header("Player Visuals")]
     [SerializeField]
@@ -138,13 +145,37 @@ public class Player : MonoBehaviour
 
     private void Thrusters()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && _uiManager.currentFuel > 0)
         {
-            _currentSpeed += _thrusterSpeed;
+            CalculateFuelUse();
+            _currentSpeed = _thrusterSpeed;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            _currentSpeed -= _thrusterSpeed;
+            _currentSpeed = _thrusterSpeed;
+            _canRefillThrust = Time.time + _thrusterRefillCoolDown;
+        }
+        else
+        {
+            _currentSpeed = _speed;
+            RefillFuel();
+        }
+    }
+
+    void CalculateFuelUse()
+    {
+        _uiManager.currentFuel -= _fuelBurnRate * Time.deltaTime;
+    }
+
+    public void RefillFuel()
+    {
+        if(_uiManager.currentFuel < _uiManager.maxFuel && Time.time > _canRefillThrust)
+        {
+            _uiManager.currentFuel += _fuelRefillRate * Time.deltaTime;
+        }
+        else if (_uiManager.currentFuel > _uiManager.maxFuel)
+        {
+            _uiManager.currentFuel = _uiManager.maxFuel;
         }
     }
 
