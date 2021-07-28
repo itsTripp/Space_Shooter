@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3087363275964155577}
   m_Layer: 0
   m_Name: Spray_Shot_Powerup
-  m_TagString: Untagged
+  m_TagString: Powerup_Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

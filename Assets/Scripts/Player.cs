@@ -114,12 +114,12 @@ public class Player : MonoBehaviour
     {
         
         CalculateMovement();
-        Thrusters();
 
         if(Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             ShootLaser();
         }
+        
     }
     void CalculateMovement()
     {
@@ -141,6 +141,8 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(11.3f, transform.position.y, 0);
         }
+
+        Thrusters();
     }
 
     private void Thrusters()
@@ -152,17 +154,17 @@ public class Player : MonoBehaviour
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            _currentSpeed = _thrusterSpeed;
+            _currentSpeed = _speed;
             _canRefillThrust = Time.time + _thrusterRefillCoolDown;
         }
-        else
+        else if (_isSpeedBoostActive == false)
         {
             _currentSpeed = _speed;
             RefillFuel();
         }
     }
 
-    void CalculateFuelUse()
+    private void CalculateFuelUse()
     {
         _uiManager.currentFuel -= _fuelBurnRate * Time.deltaTime;
     }
@@ -292,14 +294,14 @@ public class Player : MonoBehaviour
     public void SpeedBoostActive()
     {
         _isSpeedBoostActive = true;
-        _currentSpeed *=  _speedMultiplier;
+        _currentSpeed *= _speedMultiplier;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
     IEnumerator SpeedBoostPowerDownRoutine()
     {
         yield return new WaitForSeconds(5f);
         _isSpeedBoostActive = false;
-        _currentSpeed /=  _speedMultiplier;
+        _currentSpeed /= _speedMultiplier;
     }
 
     public void AddScore(int points)

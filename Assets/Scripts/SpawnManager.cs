@@ -12,6 +12,24 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _powerups;
 
+    public int[] table =
+    {
+        40, //Ammo
+        20, //TripleShot
+        15, //Speed
+        15, //Shield
+        //10, //PowerDown
+        5,  //Health
+        5   //SprayShot
+    };
+
+    private int _totalWeight = 100;
+    private int _randomNumber;
+
+    private void Start()
+    {
+        
+    }
     public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
@@ -35,14 +53,34 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         while (_stopSpawning == false)
         {
-            Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            Instantiate(_powerups[Random.Range(0,6)], posToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(3f, 7f));
+            ChoosePowerUp();
+            yield return new WaitForSeconds(Random.Range(3f, 7f));            
         }
     }
 
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
+    }
+
+    private void ChoosePowerUp()
+    {
+        float randomX = Random.Range(-8f, 8f);
+
+        _randomNumber = Random.Range(0, _totalWeight);
+        Debug.Log("Random Number is " + _randomNumber);
+
+        for (int i = 0; i < table.Length; i++)
+        {
+            if(_randomNumber <= table[i])
+            {
+                Instantiate(_powerups[i], new Vector3(randomX, 7, 0), Quaternion.identity);
+                return;
+            }
+            else
+            {
+                _randomNumber -= table[i];
+            }
+        }
     }
 }

@@ -13,6 +13,12 @@ public class Enemy : MonoBehaviour
     private GameObject _laser_Prefab;
     private float _fireRate = 3.0f;
     private float _canFire = -1f;
+    //ZigZag
+    private float _frequency = 3f;
+    private float _magnitude = 2f;
+
+    private Vector3 _position;
+    private Vector3 _axis;
 
     // Start is called before the first frame update
     void Start()
@@ -32,12 +38,16 @@ public class Enemy : MonoBehaviour
             Debug.LogError("Animator is Null");
         }
 
+        _position = transform.position;
+        _axis = transform.right;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        CalculateMovement();
+        DiagonalMovement();
+       // CalculateMovement();
 
         if(Time.time > _canFire)
         {
@@ -59,6 +69,17 @@ public class Enemy : MonoBehaviour
         if (transform.position.y < -6f)
         {
             transform.position = new Vector3(Random.Range(-9f, 9f), 8f, 0);
+        }
+    }
+
+    private void DiagonalMovement()
+    {
+        _position += Vector3.down * Time.deltaTime * _enemyMovementSpeed;
+        transform.position = _position + _axis * Mathf.Sin(Time.time * _frequency) * _magnitude;
+        if(transform.position.y < -6f)
+        {
+            transform.position = new Vector3(Random.Range(-9f, 9f), 8f, 0);
+            _position = transform.position;
         }
     }
 
