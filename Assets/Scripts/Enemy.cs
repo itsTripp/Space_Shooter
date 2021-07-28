@@ -40,7 +40,6 @@ public class Enemy : MonoBehaviour
 
         _position = transform.position;
         _axis = transform.right;
-
     }
 
     // Update is called once per frame
