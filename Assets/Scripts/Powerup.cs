@@ -12,11 +12,12 @@ public class Powerup : MonoBehaviour
     private int _powerupID;
     [SerializeField]
     private AudioClip _audioClip;
+    private Player _player;
 
     // Start is called before the first frame update
     void Start()
     {
-             
+        _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -26,6 +27,15 @@ public class Powerup : MonoBehaviour
         if (transform.position.y < -5f)
         {
             Destroy(this.gameObject);
+        }
+        
+        if(Input.GetKey(KeyCode.C))
+        {
+            if ((transform.position - _player.transform.position).magnitude < 5)
+            {
+                Vector3 distance = _player.transform.position - transform.position;
+                transform.Translate(distance * 1.5f * Time.deltaTime);
+            }
         }
     }
 
