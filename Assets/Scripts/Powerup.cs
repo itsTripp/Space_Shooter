@@ -59,6 +59,9 @@ public class Powerup : MonoBehaviour
                     case 5:
                         player.SprayShotActive();
                         break;
+                    case 6:
+                        player.NoAmmoPowerup();
+                        break;
                 }
                 Destroy(this.gameObject);
             }

@@ -16,11 +16,12 @@ public class SpawnManager : MonoBehaviour
     {
         40, //Ammo
         20, //TripleShot
-        15, //Speed
-        15, //Shield
+        10, //Speed
+        10, //Shield
         //10, //PowerDown
         5,  //Health
-        5   //SprayShot
+        5,   //SprayShot
+        10   //No Ammo
     };
 
     private int _totalWeight = 100;
