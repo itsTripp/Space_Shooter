@@ -45,8 +45,9 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DiagonalMovement();
-       // CalculateMovement();
+        // DiagonalMovement();
+        // CalculateMovement();
+        AggressiveEnemy();
 
         if(Time.time > _canFire)
         {
@@ -80,6 +81,20 @@ public class Enemy : MonoBehaviour
             transform.position = new Vector3(Random.Range(-9f, 9f), 8f, 0);
             _position = transform.position;
         }
+    }
+
+    private void AggressiveEnemy()
+    {
+        transform.Translate(Vector3.down * _enemyMovementSpeed * Time.deltaTime);
+        if (transform.position.y < -6f)
+        {
+            transform.position = new Vector3(Random.Range(-9f, 9f), 8f, 0);
+        }
+        if((transform.position - _player.transform.position).magnitude < 5)
+            {
+            Vector3 distance = _player.transform.position - transform.position;
+            transform.Translate(distance * 1.5f * Time.deltaTime);
+            }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
