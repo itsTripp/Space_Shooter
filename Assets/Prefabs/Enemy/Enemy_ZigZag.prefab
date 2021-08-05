@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6909015042352694090}
   - component: {fileID: 5672692430317415443}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy_ZigZag
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,6 +48,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e90d24a5f61c64c861fc05b205915c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isNormal: 0
+  _isZigZag: 1
+  _isAggressive: 0
   _enemyMovementSpeed: 4
   _laser_Prefab: {fileID: 5649183854694385849, guid: 00970913f5b72bb45ac295a6289aa789, type: 3}
 --- !u!212 &4339922505189079174

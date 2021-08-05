@@ -17,10 +17,13 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text _restartLevelText;
     [SerializeField]
+    private Text _waveText;
+    [SerializeField]
     private Slider _thrusterSlider;
     public float maxFuel = 100f;
     public float currentFuel;
     private GameManager _gameManager;
+    private SpawnManager _spawnManager;
 
     // Start is called before the first frame update
     void Start()
@@ -30,10 +33,16 @@ public class UIManager : MonoBehaviour
         _gameOverText.gameObject.SetActive(false);
         _restartLevelText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
 
         if (_gameManager == null)
         {
             Debug.LogError("Game Manager is null");
+        }
+
+        if(_spawnManager == null)
+        {
+            Debug.LogError("Spawn Manager is Null");
         }
     }
 
@@ -78,6 +87,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SpawnNextWave()
+    {
+        StartCoroutine(WaveTextEnableRoutine());
+    }
+
+    IEnumerator WaveTextEnableRoutine()
+    {
+        _waveText.text = "Wave " + _spawnManager.GetWaveNumber();
+        _waveText.gameObject.SetActive(true);
+        _spawnManager.EnableNextWaveSpawning();
+        yield return new WaitForSeconds(3f);
+        _waveText.gameObject.SetActive(false);
+    }
     public void UpdateAmmoCount(int ammoCount, int maximumAmmo)
     {
         _ammoText.text = "Ammo: " + ammoCount + " / " + maximumAmmo;
