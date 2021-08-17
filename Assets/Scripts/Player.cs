@@ -63,6 +63,8 @@ public class Player : MonoBehaviour
     private GameObject _rightEngine;
     [SerializeField]
     private GameObject _leftEngine;
+    [SerializeField]
+    private GameObject _thruster;
     private AudioSource _audioSource;
     [SerializeField]
     private AudioClip _laserAudio;
@@ -112,14 +114,13 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
         CalculateMovement();
+        UpdateEngines();
 
         if(Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             ShootLaser();
         }
-        
     }
     void CalculateMovement()
     {
@@ -149,11 +150,13 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftShift) && _uiManager.currentFuel > 0)
         {
+            _thruster.SetActive(true);
             CalculateFuelUse();
             _currentSpeed = _thrusterSpeed;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
+            _thruster.SetActive(false);
             _currentSpeed = _speed;
             _canRefillThrust = Time.time + _thrusterRefillCoolDown;
         }
@@ -235,39 +238,47 @@ public class Player : MonoBehaviour
                 case 2:
                     _shieldRenderer.color = Color.yellow;
                     break;
-
             }
-            
             return;
         }
 
         _lives -= 1;
         _shake.CameraShake();
-
-        if (_lives == 2)
-        {
-            _rightEngine.SetActive(true);
-        }
-
-        else if (_lives == 1)
-        {
-            _leftEngine.SetActive(true);
-        }   
-
         _uiManager.UpdateLives(_lives);
 
-        if(_lives < 1)        
+        if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
             Destroy(gameObject);
         }
     }
+    private void UpdateEngines()
+    {
+        if (_lives == 3)
+        {
+            _rightEngine.SetActive(false);
+            _leftEngine.SetActive(false);
+        }
+        else if (_lives == 2)
+        {
+            _rightEngine.SetActive(true);
+            _leftEngine.SetActive(false);
+        }
+
+        else if (_lives == 1)
+        {
+            _rightEngine.SetActive(true);
+            _leftEngine.SetActive(true);
+        }
+    }
+
 
     public void ShieldActive()
     {
         _isShieldsActive = true;
         _shieldPrefab.SetActive(true);
         _shieldStrength = 3;
+        _shieldRenderer.color = Color.cyan;
     }
 
     public void TripleShotActive()
@@ -312,7 +323,11 @@ public class Player : MonoBehaviour
 
     public void AddHealth()
     {
-        if(_lives >= 2)
+        if(_lives == 3)
+            {
+                _lives = 3;
+            }
+        if(_lives <= 2)
         {
             _lives++;
             _uiManager.UpdateLives(_lives);

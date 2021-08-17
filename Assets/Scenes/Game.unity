@@ -1397,7 +1397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &886068944
 Transform:
   m_ObjectHideFlags: 0
@@ -2015,6 +2015,7 @@ MonoBehaviour:
   _thrusterRefillCoolDown: 2
   _rightEngine: {fileID: 487124942}
   _leftEngine: {fileID: 1761080229}
+  _thruster: {fileID: 886068943}
   _laserAudio: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
 --- !u!212 &1618505529
 SpriteRenderer:
@@ -2241,14 +2242,8 @@ MonoBehaviour:
   _enemyContainer: {fileID: 1093268343}
   spawnRate: 5
   _powerups:
-  - {fileID: 3916995046093835056, guid: 99a3131e158b4db48b1be6ee9b5d0a1c, type: 3}
-  - {fileID: 7869003003385026334, guid: 569f52c5d3098bd4fb7bf5dd023976d8, type: 3}
-  - {fileID: 4454377600331202970, guid: 058c7136fb56bba4b8f0f9e43af31d70, type: 3}
   - {fileID: 6097705149335278526, guid: 79189ec5f9863b34ca948b9c59f018ae, type: 3}
-  - {fileID: 6276463265011597439, guid: f7d8c430c4e934c489c799ce8d446741, type: 3}
-  - {fileID: 5155083611370476113, guid: e3c448b13315e32479c6a46cb73f07b6, type: 3}
-  - {fileID: 4702884877642104267, guid: 6b1e308431f91fb4d8d92d9e89031224, type: 3}
-  table: 140000000a0000000a0000000500000028000000050000000a000000
+  table: 32000000
   _isGameActive: 1
   _spawnEnemyWave: 1
   _currentEnemies: 0

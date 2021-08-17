@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     private Animator _animator;
     private AudioSource _audioSource;
     private SpawnManager _spawnManager;
+    private bool enemyIsAlive = true;
     [SerializeField]
     private GameObject _laser_Prefab;
     private float _fireRate = 3.0f;
@@ -28,6 +29,8 @@ public class Enemy : MonoBehaviour
 
     private Vector3 _position;
     private Vector3 _axis;
+
+    private SpriteRenderer _spriteRenderer;
     
 
     // Start is called before the first frame update
@@ -36,7 +39,7 @@ public class Enemy : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent <Player>();
         _audioSource = GetComponent<AudioSource>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         if (_player == null)
         {
             Debug.LogError("Player is Null");            
@@ -64,9 +67,9 @@ public class Enemy : MonoBehaviour
         CalculateMovement();
         AggressiveEnemy();
 
-        if(Time.time > _canFire)
+        if(Time.time > _canFire && enemyIsAlive == true)
         {
-            _fireRate = Random.Range(3f, 7f);
+            _fireRate = Random.Range(3f, 5f);
             _canFire = Time.time + _fireRate;
             GameObject enemyLaser = Instantiate(_laser_Prefab, transform.position, Quaternion.identity);
             Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
@@ -75,6 +78,10 @@ public class Enemy : MonoBehaviour
             {
                 lasers[i].AssignEnemyLaser();
             }
+        }
+        else
+        {
+            enemyIsAlive = false;
         }
     }
 
@@ -117,6 +124,7 @@ public class Enemy : MonoBehaviour
             {
                 Vector3 distance = _player.transform.position - transform.position;
                 transform.Translate(distance * 1.5f * Time.deltaTime);
+                _spriteRenderer.color = Color.blue;
             }
         }
     }
@@ -134,7 +142,9 @@ public class Enemy : MonoBehaviour
             _animator.SetTrigger("OnEnemyDeath");
             _enemyMovementSpeed = 0;
             _audioSource.Play();
+            Destroy(GetComponent<Collider2D>());
             Destroy(gameObject,2.8f);
+            enemyIsAlive = false;
             _spawnManager.EnemyKilled();
         }
 
@@ -150,6 +160,7 @@ public class Enemy : MonoBehaviour
             _audioSource.Play();
             Destroy(GetComponent<Collider2D>());
             Destroy(gameObject,2.8f);
+            enemyIsAlive = false;
             _spawnManager.EnemyKilled();
         }
     }
