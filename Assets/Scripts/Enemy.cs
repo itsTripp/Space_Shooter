@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour
     private bool _isZigZag = false;
     [SerializeField]
     private bool _isAggressive = false;
+    [SerializeField]
+    private bool _isDodge = false;
 
     [SerializeField]
     private float _enemyMovementSpeed = 4f;
@@ -29,11 +31,13 @@ public class Enemy : MonoBehaviour
     //Shields
     [SerializeField]
     private GameObject _shields;
-    [SerializeField]
     private bool _isShieldsActive = false;
     private int _shieldChance;
-    [SerializeField]
     private int _shieldPower;
+
+    //Dodge
+    private bool _laserDetected = false;
+    private int _randomNumber;
 
     private Vector3 _position;
     private Vector3 _axis;
@@ -70,6 +74,8 @@ public class Enemy : MonoBehaviour
         _isShieldsActive = false;
         _shields.SetActive(false);
         ShieldCheck();
+        _randomNumber = Random.Range(0, 2) * 2 - 1;
+        
     }
 
     // Update is called once per frame
@@ -78,6 +84,7 @@ public class Enemy : MonoBehaviour
         DiagonalMovement();
         CalculateMovement();
         AggressiveEnemy();
+        DodgeMovement();
 
         if(Time.time > _canFire && enemyIsAlive == true)
         {
@@ -107,6 +114,27 @@ public class Enemy : MonoBehaviour
                 transform.position = new Vector3(Random.Range(-9f, 9f), 8f, 0);
             }
         }        
+    }
+
+    private void DodgeMovement()
+    {
+        if (_isDodge == true)
+        {
+            transform.Translate(Vector3.down * _enemyMovementSpeed * Time.deltaTime);
+            if (transform.position.y < -6f)
+            {
+                transform.position = new Vector3(Random.Range(-9f, 9f), 8f, 0);
+            }
+            if(_laserDetected)
+            {
+                transform.Translate(new Vector3(_randomNumber * 5, -1, 0) * _enemyMovementSpeed * Time.deltaTime);
+            }
+        }
+    }
+
+  public void LaserFound(bool status)
+    {
+        _laserDetected = status;
     }
 
     private void DiagonalMovement()
