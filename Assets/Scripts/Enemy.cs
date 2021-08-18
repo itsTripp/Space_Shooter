@@ -11,7 +11,6 @@ public class Enemy : MonoBehaviour
     private bool _isZigZag = false;
     [SerializeField]
     private bool _isAggressive = false;
-    public int enemyID;
 
     [SerializeField]
     private float _enemyMovementSpeed = 4f;
@@ -27,6 +26,14 @@ public class Enemy : MonoBehaviour
     //ZigZag
     private float _frequency = 3f;
     private float _magnitude = 2f;
+    //Shields
+    [SerializeField]
+    private GameObject _shields;
+    [SerializeField]
+    private bool _isShieldsActive = false;
+    private int _shieldChance;
+    [SerializeField]
+    private int _shieldPower;
 
     private Vector3 _position;
     private Vector3 _axis;
@@ -59,6 +66,10 @@ public class Enemy : MonoBehaviour
         }
         _position = transform.position;
         _axis = transform.right;
+
+        _isShieldsActive = false;
+        _shields.SetActive(false);
+        ShieldCheck();
     }
 
     // Update is called once per frame
@@ -149,7 +160,19 @@ public class Enemy : MonoBehaviour
             _spawnManager.EnemyKilled();
         }
 
-        if (other.transform.tag == "Laser")
+        if (other.transform.tag == "Laser" && _isShieldsActive == true)
+        {
+            Destroy(other.gameObject);
+            _shieldPower--;
+            if(_shieldPower == 0)
+            {
+                _shields.SetActive(false);
+                StartCoroutine(ShieldChangeDelay());
+            }
+            return;
+        }
+
+        if (other.transform.tag == "Laser" && _isShieldsActive == false)
         { 
             Destroy(other.gameObject);
             if (_player != null)
@@ -164,5 +187,28 @@ public class Enemy : MonoBehaviour
             enemyIsAlive = false;
             _spawnManager.EnemyKilled();
         }
+    }
+
+    private void ShieldIsActive()
+    {
+        _isShieldsActive = true;
+        _shields.SetActive(true);    
+        _shieldPower = 1;
+        Debug.Log("Shields Active");
+    }
+
+    private void ShieldCheck()
+    {
+        _shieldChance = Random.Range(0, 4);
+        if(_shieldChance == 0)
+        {
+            ShieldIsActive();
+        }
+    }
+
+    IEnumerator ShieldChangeDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        _isShieldsActive = false;
     }
 }

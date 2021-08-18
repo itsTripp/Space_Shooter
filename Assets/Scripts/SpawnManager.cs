@@ -19,23 +19,24 @@ public class SpawnManager : MonoBehaviour
         20, //TripleShot
         10, //Speed
         10, //Shield
+        10,  //No Ammo
         //10, //PowerDown
         5,  //Health
-        5,   //SprayShot
-        10   //No Ammo
+        5   //SprayShot
     };
 
     public int[] enemyTable =
     {
-        20, //Basic
-        20, //ZigZag
-        20, //Dodge
-        20, //Shield
-        20 //Aggressive
+        25, //Basic
+        25, //ZigZag
+        25, //Dodge
+        25 //Aggressive
     };
 
-    private int _totalWeight = 100;
-    private int _randomNumber;
+    private int _powerupTotalWeight;
+    private int _enemyTotalWeight;
+    private int _powerupRandomNumber;
+    private int _enemyRandomNumber;
     [SerializeField]
     private bool _isGameActive = true;
     [SerializeField]
@@ -55,6 +56,15 @@ public class SpawnManager : MonoBehaviour
         if (_uiManager == null)
         {
             Debug.LogError("UI Manager is Null");
+        }
+
+        foreach(var item in table)
+        {
+            _powerupTotalWeight += item;
+        }
+        foreach(var item in enemyTable)
+        {
+            _enemyTotalWeight += item;
         }
     }
 
@@ -155,28 +165,30 @@ public class SpawnManager : MonoBehaviour
     {
         float randomX = Random.Range(-8f, 8f);
 
-        _randomNumber = Random.Range(0, _totalWeight);
-        Debug.Log("Random Number is " + _randomNumber);
+        _powerupRandomNumber = Random.Range(0, _powerupTotalWeight);
+        //Debug.Log("Powerup Random Number is " + _powerupRandomNumber);
 
         for (int i = 0; i < table.Length; i++)
         {
-            if (_randomNumber <= table[i])
+            if (_powerupRandomNumber <= table[i])
             {
                 Instantiate(_powerups[i], new Vector3(randomX, 7, 0), Quaternion.identity);
                 return;
             }
             else
             {
-                _randomNumber -= table[i];
+                _powerupRandomNumber -= table[i];
             }
         }
     }
 
     private void ChooseEnemy()
     {
+        _enemyRandomNumber = Random.Range(0, _enemyTotalWeight);
+        //Debug.Log("Enemy Random Number is " + _enemyRandomNumber);
         for (int i = 0; i < enemyTable.Length; i++)
         {
-            if (_randomNumber <= enemyTable[i])
+            if (_enemyRandomNumber <= enemyTable[i])
             {
                 Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
                 GameObject newEnemy = Instantiate(_enemy[i], posToSpawn, Quaternion.identity);
@@ -185,7 +197,7 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
-                _randomNumber -= enemyTable[i];
+                _enemyRandomNumber -= enemyTable[i];
             }
         }
     }
