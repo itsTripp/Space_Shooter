@@ -51,6 +51,7 @@ MonoBehaviour:
   _isNormal: 0
   _isZigZag: 0
   _isAggressive: 1
+  enemyID: 4
   _enemyMovementSpeed: 4
   _laser_Prefab: {fileID: 5649183854694385849, guid: 00970913f5b72bb45ac295a6289aa789, type: 3}
 --- !u!212 &4339922505189079174

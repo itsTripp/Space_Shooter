@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     private bool _isZigZag = false;
     [SerializeField]
     private bool _isAggressive = false;
+    public int enemyID;
 
     [SerializeField]
     private float _enemyMovementSpeed = 4f;

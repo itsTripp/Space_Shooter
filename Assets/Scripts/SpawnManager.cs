@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _enemy;
+    private GameObject[] _enemy;
     [SerializeField]
     private GameObject _enemyContainer;
     private bool _stopSpawning = false;
@@ -23,6 +23,15 @@ public class SpawnManager : MonoBehaviour
         5,  //Health
         5,   //SprayShot
         10   //No Ammo
+    };
+
+    public int[] enemyTable =
+    {
+        20, //Basic
+        20, //ZigZag
+        20, //Dodge
+        20, //Shield
+        20 //Aggressive
     };
 
     private int _totalWeight = 100;
@@ -84,9 +93,7 @@ public class SpawnManager : MonoBehaviour
         {
             for (int i = 0; i < _enemiesInCurrentWave; i++)
             {
-                Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-                GameObject newEnemy = Instantiate(_enemy, posToSpawn, Quaternion.identity);
-                newEnemy.transform.parent = _enemyContainer.transform;
+                ChooseEnemy();
                 _currentEnemies++;
                 yield return new WaitForSeconds(5f);
 
@@ -95,7 +102,7 @@ public class SpawnManager : MonoBehaviour
                     break;
                 }
             }
-            _enemiesInCurrentWave += 15;
+            _enemiesInCurrentWave += 3;
             _waveNumber++;
             _spawnEnemyWave = false;
         }
@@ -161,6 +168,24 @@ public class SpawnManager : MonoBehaviour
             else
             {
                 _randomNumber -= table[i];
+            }
+        }
+    }
+
+    private void ChooseEnemy()
+    {
+        for (int i = 0; i < enemyTable.Length; i++)
+        {
+            if (_randomNumber <= enemyTable[i])
+            {
+                Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
+                GameObject newEnemy = Instantiate(_enemy[i], posToSpawn, Quaternion.identity);
+                newEnemy.transform.parent = _enemyContainer.transform;
+                return;
+            }
+            else
+            {
+                _randomNumber -= enemyTable[i];
             }
         }
     }

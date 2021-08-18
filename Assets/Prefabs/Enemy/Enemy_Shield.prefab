@@ -159,11 +159,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e90d24a5f61c64c861fc05b205915c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isNormal: 0
+  _isZigZag: 0
+  _isAggressive: 0
+  enemyID: 3
   _enemyMovementSpeed: 4
   _laser_Prefab: {fileID: 5649183854694385849, guid: 00970913f5b72bb45ac295a6289aa789, type: 3}
-  _shieldStrength: 1
-  _shieldPrefab: {fileID: 5575038669982795372}
-  _isShieldActive: 1
 --- !u!212 &4339922505189079174
 SpriteRenderer:
   m_ObjectHideFlags: 0
