@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4454377600331202969}
   - component: {fileID: 4454377600331202968}
   - component: {fileID: 4454377600331202971}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shield_Powerup
   m_TagString: Powerup_Item
   m_Icon: {fileID: 0}
@@ -168,3 +168,5 @@ MonoBehaviour:
   _powerupSpeed: 3
   _powerupID: 2
   _audioClip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _explosion: {fileID: 169658657263258462, guid: 9b5c8253b511dd04cabf8d3231a1873d, type: 3}
+  _explosionAudio: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}

@@ -13,18 +13,28 @@ public class Enemy : MonoBehaviour
     private bool _isAggressive = false;
     [SerializeField]
     private bool _isDodge = false;
+    [SerializeField]
+    private bool _isEnemyShootBackwards = false;
 
     [SerializeField]
     private float _enemyMovementSpeed = 4f;
     private Player _player;
     private Animator _animator;
     private AudioSource _audioSource;
+    [SerializeField]
+    private AudioClip _laserAudio;
     private SpawnManager _spawnManager;
     private bool enemyIsAlive = true;
     [SerializeField]
     private GameObject _laser_Prefab;
+    [SerializeField]
+    private GameObject _backwardsLaserPrefab;
+   
     private float _fireRate = 3.0f;
+    private float _fireRateAtPowerup = 5.0f;
+ 
     private float _canFire = -1f;
+    private float _canFireAtPowerup = -1f;
     //ZigZag
     private float _frequency = 3f;
     private float _magnitude = 2f;
@@ -85,22 +95,28 @@ public class Enemy : MonoBehaviour
         CalculateMovement();
         AggressiveEnemy();
         DodgeMovement();
+        ShootPowerups();
+        ShootBackwardsEnemy();
 
-        if(Time.time > _canFire && enemyIsAlive == true)
+        if(Time.time > _canFire)
         {
-            _fireRate = Random.Range(3f, 5f);
-            _canFire = Time.time + _fireRate;
-            GameObject enemyLaser = Instantiate(_laser_Prefab, transform.position, Quaternion.identity);
-            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-            
-            for (int i = 0; i < lasers.Length; i++)
+            if(enemyIsAlive == true)
             {
-                lasers[i].AssignEnemyLaser();
+                _fireRate = Random.Range(3f, 5f);
+                _canFire = Time.time + _fireRate;
+                GameObject enemyLaser = Instantiate(_laser_Prefab, transform.position, Quaternion.identity);
+                AudioSource.PlayClipAtPoint(_laserAudio, new Vector3(0, 0, -10), 1.0f);
+                Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+            
+                for (int i = 0; i < lasers.Length; i++)
+                    {
+                    lasers[i].AssignEnemyLaser();
+                    }
             }
-        }
-        else
-        {
-            enemyIsAlive = false;
+            else
+            {
+                enemyIsAlive = false;
+            }
         }
     }
 
@@ -169,6 +185,84 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void ShootPowerups()
+    {
+        RaycastHit2D hitRay = Physics2D.Raycast(transform.position,
+            transform.TransformDirection(Vector2.down), 10.0f, 1 << LayerMask.NameToLayer("Powerup"));
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.down) * 10.0f, Color.red);
+
+        if (hitRay.collider != null)
+        {
+            if (hitRay.collider.gameObject.CompareTag("Powerup_Item"))
+            {
+                if (Time.time > _canFireAtPowerup)
+                {
+                    if (enemyIsAlive == true)
+                    {
+                        _canFireAtPowerup = Time.time + _fireRateAtPowerup;
+                        GameObject enemyLaser = Instantiate(_laser_Prefab, transform.position, Quaternion.identity);
+                        Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+                        for (int i = 0; i < lasers.Length; i++)
+                        {
+                            lasers[i].AssignEnemyLaser();
+                        }
+                        Debug.Log("Shooting Powerup");
+                    }
+                    else
+                    {
+                        enemyIsAlive = false;
+                    }
+                }
+            }
+        }
+    }
+
+    private void ShootBackwardsEnemy()
+    {
+        if (_isEnemyShootBackwards == true)
+        {
+            if (Time.time > _canFire)
+            {
+                if (enemyIsAlive == true)
+                {
+                    _fireRate = Random.Range(1f, 3f);
+                    _canFire = Time.time + _fireRate;
+                    if (_player != null)
+                    {
+                        if (transform.position.y > _player.transform.position.y)
+                        {
+                            Vector3 laserOffset = new Vector3(0, 0.45f, 0);
+                            GameObject enemyLaser = Instantiate(_laser_Prefab, transform.position, Quaternion.identity);
+                            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+                            for (int i = 0; i < lasers.Length; i++)
+                            {
+                                lasers[i].AssignEnemyLaser();
+                            }
+                        }
+                        else if (transform.position.y < _player.transform.position.y)
+                        {
+                            Vector3 laserOffset = new Vector3(0, 5f, 0);
+                            GameObject enemyLaser = Instantiate(_backwardsLaserPrefab, transform.position + laserOffset, Quaternion.identity);
+                            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+                            for (int i = 0; i < lasers.Length; i++)
+                            {
+                                lasers[i].AssignEnemyLaser();
+                                lasers[i].AssignDoubleSidedLaser();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    enemyIsAlive = false;
+                }
+            }
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.transform.tag == "Player")
@@ -188,6 +282,7 @@ public class Enemy : MonoBehaviour
             _spawnManager.EnemyKilled();
         }
 
+        
         if (other.transform.tag == "Laser" && _isShieldsActive == true)
         {
             Destroy(other.gameObject);

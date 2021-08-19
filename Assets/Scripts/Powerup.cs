@@ -14,6 +14,11 @@ public class Powerup : MonoBehaviour
     private AudioClip _audioClip;
     private Player _player;
 
+    [SerializeField]
+    private GameObject _explosion;
+    [SerializeField]
+    private AudioClip _explosionAudio;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,6 +80,14 @@ public class Powerup : MonoBehaviour
                 }
                 Destroy(this.gameObject);
             }
+        }
+
+        if (other.transform.tag == "Laser")
+        {
+            Destroy(other.gameObject);
+            AudioSource.PlayClipAtPoint(_explosionAudio, new Vector3(0, 0, -10), 1.0f);
+            Instantiate(_explosion, transform.position, Quaternion.identity);
+            Destroy(this.gameObject);
         }
     }
 }

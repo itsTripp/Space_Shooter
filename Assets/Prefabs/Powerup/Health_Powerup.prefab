@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2755144225509492351}
   - component: {fileID: 6045473596589771353}
   - component: {fileID: 7543509690806311116}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Health_Powerup
   m_TagString: Powerup_Item
   m_Icon: {fileID: 0}
@@ -168,3 +168,5 @@ MonoBehaviour:
   _powerupSpeed: 3
   _powerupID: 3
   _audioClip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _explosion: {fileID: 169658657263258462, guid: 9b5c8253b511dd04cabf8d3231a1873d, type: 3}
+  _explosionAudio: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}

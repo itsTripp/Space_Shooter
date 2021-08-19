@@ -162,11 +162,13 @@ MonoBehaviour:
   _isNormal: 0
   _isZigZag: 1
   _isAggressive: 0
+  _isDodge: 0
+  _isShootPowerup: 1
   _enemyMovementSpeed: 4
+  _laserAudio: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
   _laser_Prefab: {fileID: 5649183854694385849, guid: 00970913f5b72bb45ac295a6289aa789, type: 3}
   _shields: {fileID: 6416475078526084840}
-  _isShieldsActive: 0
-  _shieldPower: 0
+  _canShoot: 1
 --- !u!212 &4339922505189079174
 SpriteRenderer:
   m_ObjectHideFlags: 0
