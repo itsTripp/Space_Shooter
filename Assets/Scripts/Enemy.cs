@@ -27,9 +27,7 @@ public class Enemy : MonoBehaviour
     private bool enemyIsAlive = true;
     [SerializeField]
     private GameObject _laser_Prefab;
-    [SerializeField]
-    private GameObject _backwardsLaserPrefab;
-   
+       
     private float _fireRate = 3.0f;
     private float _fireRateAtPowerup = 5.0f;
  
@@ -244,7 +242,7 @@ public class Enemy : MonoBehaviour
                         else if (transform.position.y < _player.transform.position.y)
                         {
                             Vector3 laserOffset = new Vector3(0, 5f, 0);
-                            GameObject enemyLaser = Instantiate(_backwardsLaserPrefab, transform.position + laserOffset, Quaternion.identity);
+                            GameObject enemyLaser = Instantiate(_laser_Prefab, transform.position + laserOffset, Quaternion.identity);
                             Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
 
                             for (int i = 0; i < lasers.Length; i++)
@@ -307,6 +305,20 @@ public class Enemy : MonoBehaviour
             _audioSource.Play();
             Destroy(GetComponent<Collider2D>());
             Destroy(gameObject,2.8f);
+            enemyIsAlive = false;
+            _spawnManager.EnemyKilled();
+        }
+        else if(other.tag == "Missile")
+        {
+            Destroy(other.gameObject);
+            if(_player != null)
+            {
+                _player.AddScore(10);
+            }
+            _animator.SetTrigger("OnEnemyDeath");
+            _enemyMovementSpeed = 0;
+            _audioSource.Play();
+            Destroy(gameObject, 2.8f);
             enemyIsAlive = false;
             _spawnManager.EnemyKilled();
         }

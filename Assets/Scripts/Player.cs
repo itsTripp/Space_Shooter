@@ -27,12 +27,17 @@ public class Player : MonoBehaviour
     private SpriteRenderer _shieldRenderer;
     [SerializeField]
     private int _shieldStrength = 3;
+    [SerializeField]
+    private GameObject _homingProjectilePrefab;
+    private int _homingProjectileShot = 3;
+
 
     private bool _isTripleShotActive = false;
     private bool _isSprayShotActive = false;
     private bool _isSpeedBoostActive = false;
     private bool _isShieldsActive = false;
     private bool _canPlayerShoot = true;
+    private bool _isHomingProjectileActive = true;
 
     [SerializeField]
     private float _fireRate = 0.5f;
@@ -120,6 +125,19 @@ public class Player : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             ShootLaser();
+        }
+
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            if(_isHomingProjectileActive == true && _homingProjectileShot > 0)
+            {
+                FireHomingProjectile();
+                Debug.Log("Shot Missile");
+            }
+        }
+        if(_homingProjectileShot == 0)
+        {
+            _isHomingProjectileActive = false;
         }
     }
     void CalculateMovement()
@@ -344,5 +362,17 @@ public class Player : MonoBehaviour
     {
         _ammoCount = 0;
         _uiManager.UpdateAmmoCount(_ammoCount, _maximumAmmo);
+    }
+
+    private void FireHomingProjectile()
+    {
+        Instantiate(_homingProjectilePrefab, transform.position + new Vector3(0, 1.4f, 0), Quaternion.identity);
+        _homingProjectileShot --;
+    }
+
+    public void HomingProjectileSetActive()
+    {
+        _isHomingProjectileActive = true;
+        _homingProjectileShot = 3;
     }
 }

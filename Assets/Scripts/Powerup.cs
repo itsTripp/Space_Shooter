@@ -77,6 +77,9 @@ public class Powerup : MonoBehaviour
                     case 6:
                         player.NoAmmoPowerup();
                         break;
+                    case 7:
+                        player.HomingProjectileSetActive();
+                        break;
                 }
                 Destroy(this.gameObject);
             }

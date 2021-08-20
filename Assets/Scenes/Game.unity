@@ -2006,6 +2006,7 @@ MonoBehaviour:
   _shieldPrefab: {fileID: 328139318}
   _shieldRenderer: {fileID: 328139322}
   _shieldStrength: 3
+  _homingProjectilePrefab: {fileID: 8242065693510026552, guid: 866b631fc897d0946bde214a6b45fbe6, type: 3}
   _fireRate: 0.15
   _ammoCount: 15
   _lives: 3
@@ -2247,6 +2248,7 @@ MonoBehaviour:
   _enemyContainer: {fileID: 1093268343}
   spawnRate: 5
   _powerups:
+  - {fileID: 8471078832966968320, guid: fb91cf4c149df0b47ba0135ba08e921b, type: 3}
   - {fileID: 6276463265011597439, guid: f7d8c430c4e934c489c799ce8d446741, type: 3}
   - {fileID: 3916995046093835056, guid: 99a3131e158b4db48b1be6ee9b5d0a1c, type: 3}
   - {fileID: 7869003003385026334, guid: 569f52c5d3098bd4fb7bf5dd023976d8, type: 3}
@@ -2254,7 +2256,7 @@ MonoBehaviour:
   - {fileID: 4702884877642104267, guid: 6b1e308431f91fb4d8d92d9e89031224, type: 3}
   - {fileID: 6097705149335278526, guid: 79189ec5f9863b34ca948b9c59f018ae, type: 3}
   - {fileID: 5155083611370476113, guid: e3c448b13315e32479c6a46cb73f07b6, type: 3}
-  table: 28000000140000000a0000000a0000000a0000000500000005000000
+  table: 28000000140000000a0000000a0000000a000000050000000500000005000000
   enemyTable: 1400000014000000140000001400000014000000
   _isGameActive: 1
   _spawnEnemyWave: 1
