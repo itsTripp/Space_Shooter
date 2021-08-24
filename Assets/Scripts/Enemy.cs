@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour
     private bool _isDodge = false;
     [SerializeField]
     private bool _isEnemyShootBackwards = false;
+    [SerializeField]
+    private bool _isTripleShotEnemy = false;
 
     [SerializeField]
     private float _enemyMovementSpeed = 4f;
@@ -27,6 +29,8 @@ public class Enemy : MonoBehaviour
     private bool enemyIsAlive = true;
     [SerializeField]
     private GameObject _laser_Prefab;
+    [SerializeField]
+    private GameObject _tripleShotPrefab;
        
     private float _fireRate = 3.0f;
     private float _fireRateAtPowerup = 5.0f;
@@ -51,7 +55,6 @@ public class Enemy : MonoBehaviour
     private Vector3 _axis;
 
     private SpriteRenderer _spriteRenderer;
-    
 
     // Start is called before the first frame update
     void Start()
@@ -76,6 +79,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("SpawnManager is Null");
         }
+
         _position = transform.position;
         _axis = transform.right;
 
@@ -89,14 +93,15 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DiagonalMovement();
+        ZigZagMovement();
         CalculateMovement();
         AggressiveEnemy();
         DodgeMovement();
         ShootPowerups();
         ShootBackwardsEnemy();
+        TripleShotEnemy();
 
-        if(Time.time > _canFire)
+        /*if(Time.time > _canFire)
         {
             if(enemyIsAlive == true)
             {
@@ -115,6 +120,30 @@ public class Enemy : MonoBehaviour
             {
                 enemyIsAlive = false;
             }
+        }*/
+    }
+
+    void EnemyShootLaser()
+    {
+        if (Time.time > _canFire)
+        {
+            if (enemyIsAlive == true)
+            {
+                _fireRate = Random.Range(3f, 5f);
+                _canFire = Time.time + _fireRate;
+                GameObject enemyLaser = Instantiate(_laser_Prefab, transform.position, Quaternion.identity);
+                AudioSource.PlayClipAtPoint(_laserAudio, new Vector3(0, 0, -10), 1.0f);
+                Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+                for (int i = 0; i < lasers.Length; i++)
+                {
+                    lasers[i].AssignEnemyLaser();
+                }
+            }
+            else
+            {
+                enemyIsAlive = false;
+            }
         }
     }
 
@@ -127,6 +156,7 @@ public class Enemy : MonoBehaviour
             {
                 transform.position = new Vector3(Random.Range(-9f, 9f), 8f, 0);
             }
+            EnemyShootLaser();
         }        
     }
 
@@ -143,6 +173,7 @@ public class Enemy : MonoBehaviour
             {
                 transform.Translate(new Vector3(_randomNumber * 5, -1, 0) * _enemyMovementSpeed * Time.deltaTime);
             }
+            EnemyShootLaser();
         }
     }
 
@@ -151,7 +182,7 @@ public class Enemy : MonoBehaviour
         _laserDetected = status;
     }
 
-    private void DiagonalMovement()
+    private void ZigZagMovement()
     {
         if(_isZigZag == true)
         {
@@ -162,6 +193,13 @@ public class Enemy : MonoBehaviour
                 transform.position = new Vector3(Random.Range(-9f, 9f), 8f, 0);
                 _position = transform.position;
             }
+
+            if (enemyIsAlive == false)
+            {
+                transform.position = _position + _axis;
+                
+            }
+            EnemyShootLaser();
         }
     }
 
@@ -180,6 +218,52 @@ public class Enemy : MonoBehaviour
                 transform.Translate(distance * 1.5f * Time.deltaTime);
                 _spriteRenderer.color = Color.blue;
             }
+            EnemyShootLaser();
+        }
+    }
+
+    private void TripleShotEnemy()
+    {
+        if (_isTripleShotEnemy == true)
+        {
+            StartCoroutine(DiagonalMovement());
+
+            if (Time.time > _canFire)
+            {
+                if (enemyIsAlive == true)
+                {
+                    _fireRate = Random.Range(3f, 5f);
+                    _canFire = Time.time + _fireRate;
+                    GameObject enemyLaser = Instantiate(_tripleShotPrefab, transform.position +
+                        new Vector3(0, -1.6f, 0), Quaternion.identity);
+                    AudioSource.PlayClipAtPoint(_laserAudio, new Vector3(0, 0, -10), 1.0f);
+                    Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+                    for (int i = 0; i < lasers.Length; i++)
+                    {
+                        lasers[i].AssignEnemyLaser();
+                    }
+                }
+                else
+                {
+                    enemyIsAlive = false;
+                }
+            }
+        }
+    }
+
+    IEnumerator DiagonalMovement()
+    {
+        transform.Translate(Vector3.down * _enemyMovementSpeed * Time.deltaTime);
+        if (transform.position.y < -6f)
+        {
+            transform.position = new Vector3(Random.Range(-9f, 9f), 8f, 0);
+        }
+        yield return new WaitForSeconds(.5f);
+        transform.Translate(Vector3.right * _enemyMovementSpeed * Time.deltaTime);
+        if (transform.position.x > 11.3f)
+        {
+            transform.position = new Vector3(-11.3f, transform.position.y, 0);
         }
     }
 
@@ -278,6 +362,22 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject,2.8f);
             enemyIsAlive = false;
             _spawnManager.EnemyKilled();
+
+            if (_isEnemyShootBackwards == true)
+            {
+                if (_player != null)
+                {
+                    _player.AddScore(10);
+                }
+                _animator.SetTrigger("OnEnemyDeath");
+                _enemyMovementSpeed = 0;
+                _audioSource.Play();
+                Destroy(GetComponent<Collider2D>());
+                transform.GetChild(0).gameObject.SetActive(false);
+                Destroy(gameObject, 2.8f);
+                enemyIsAlive = false;
+                _spawnManager.EnemyKilled();
+            }
         }
 
         
@@ -307,6 +407,22 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject,2.8f);
             enemyIsAlive = false;
             _spawnManager.EnemyKilled();
+
+            if (_isEnemyShootBackwards == true)
+            {
+                if (_player != null)
+                {
+                    _player.AddScore(10);
+                }
+                _animator.SetTrigger("OnEnemyDeath");
+                _enemyMovementSpeed = 0;
+                _audioSource.Play();
+                Destroy(GetComponent<Collider2D>());
+                transform.GetChild(0).gameObject.SetActive(false);
+                Destroy(gameObject, 2.8f);
+                enemyIsAlive = false;
+                _spawnManager.EnemyKilled();
+            }
         }
         else if(other.tag == "Missile")
         {

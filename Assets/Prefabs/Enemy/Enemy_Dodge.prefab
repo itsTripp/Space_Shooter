@@ -261,12 +261,13 @@ MonoBehaviour:
   _isZigZag: 0
   _isAggressive: 0
   _isDodge: 1
-  _isShootPowerup: 1
+  _isEnemyShootBackwards: 0
+  _isTripleShotEnemy: 0
   _enemyMovementSpeed: 4
   _laserAudio: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
   _laser_Prefab: {fileID: 5649183854694385849, guid: 00970913f5b72bb45ac295a6289aa789, type: 3}
+  _tripleShotPrefab: {fileID: 177243978254304280, guid: e5a952733b4bdb44f9fc770a17899389, type: 3}
   _shields: {fileID: 1733111113514221182}
-  _canShoot: 1
 --- !u!212 &4339922505189079174
 SpriteRenderer:
   m_ObjectHideFlags: 0
