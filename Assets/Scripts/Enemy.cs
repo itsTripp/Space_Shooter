@@ -101,26 +101,6 @@ public class Enemy : MonoBehaviour
         ShootBackwardsEnemy();
         TripleShotEnemy();
 
-        /*if(Time.time > _canFire)
-        {
-            if(enemyIsAlive == true)
-            {
-                _fireRate = Random.Range(3f, 5f);
-                _canFire = Time.time + _fireRate;
-                GameObject enemyLaser = Instantiate(_laser_Prefab, transform.position, Quaternion.identity);
-                AudioSource.PlayClipAtPoint(_laserAudio, new Vector3(0, 0, -10), 1.0f);
-                Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-            
-                for (int i = 0; i < lasers.Length; i++)
-                    {
-                    lasers[i].AssignEnemyLaser();
-                    }
-            }
-            else
-            {
-                enemyIsAlive = false;
-            }
-        }*/
     }
 
     void EnemyShootLaser()
@@ -235,7 +215,7 @@ public class Enemy : MonoBehaviour
                     _fireRate = Random.Range(3f, 5f);
                     _canFire = Time.time + _fireRate;
                     GameObject enemyLaser = Instantiate(_tripleShotPrefab, transform.position +
-                        new Vector3(0, -1.6f, 0), Quaternion.identity);
+                        new Vector3(0, -1.7f, 0), Quaternion.identity);
                     AudioSource.PlayClipAtPoint(_laserAudio, new Vector3(0, 0, -10), 1.0f);
                     Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
 
@@ -344,6 +324,7 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {

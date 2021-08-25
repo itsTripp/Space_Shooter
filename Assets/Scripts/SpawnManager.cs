@@ -7,6 +7,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _enemy;
     [SerializeField]
+    private GameObject _bossEnemyPrefab;
+    [SerializeField]
     private GameObject _enemyContainer;
     private bool _stopSpawning = false;
     public float spawnRate = 5f;
@@ -72,13 +74,14 @@ public class SpawnManager : MonoBehaviour
     {
         if (_currentEnemies <= 0 && _spawnEnemyWave == false)
         {
-           /* if (_waveNumber == 8)
+           if (_waveNumber == 2)
             {
                 Vector3 bossSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-                //Instantiate(_bossEnemyPrefab, bossSpawn, Quaternion.identity);
+                GameObject newBoss = Instantiate(_bossEnemyPrefab, bossSpawn, Quaternion.identity);
+                newBoss.transform.parent = _enemyContainer.transform;
                 _currentEnemies++;
                 return;
-            }*/
+            }
             EnableNextWaveSpawning();
             _uiManager.SpawnNextWave();
             StartEnemySpawning();

@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
     private Slider _thrusterSlider;
     public float maxFuel = 100f;
     public float currentFuel;
+    [SerializeField]
+    private Slider _bossHealthSlider;
     private GameManager _gameManager;
     private SpawnManager _spawnManager;
 
@@ -112,5 +114,16 @@ public class UIManager : MonoBehaviour
         {
             _ammoText.color = Color.white;
         }
+    }
+
+    public void SetBossMaxHealth(int health)
+    {
+        _bossHealthSlider.maxValue = health;
+        _bossHealthSlider.value = health;
+    }
+
+    public void SetBossHealth(int health)
+    {
+        _bossHealthSlider.value = health;
     }
 }
