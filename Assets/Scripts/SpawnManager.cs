@@ -21,18 +21,20 @@ public class SpawnManager : MonoBehaviour
         20, //TripleShot
         10, //Speed
         10, //Shield
-        10,  //No Ammo
-        //10, //PowerDown
+        10, //No Ammo
         5,  //Health
-        5   //SprayShot
+        5,  //SprayShot
+        5   // Missile
     };
 
     public int[] enemyTable =
     {
-        25, //Basic
-        25, //ZigZag
-        25, //Dodge
-        25 //Aggressive
+        20, //Basic
+        20, //ZigZag
+        20, //Dodge
+        20, //ShootBackwards
+        10, //Diagonal-TripleShot
+        10 //Aggressive
     };
 
     private int _powerupTotalWeight;
@@ -74,14 +76,16 @@ public class SpawnManager : MonoBehaviour
     {
         if (_currentEnemies <= 0 && _spawnEnemyWave == false)
         {
-           if (_waveNumber == 2)
+           if (_waveNumber == 5 || _waveNumber == 10 || _waveNumber == 15 || _waveNumber == 20)
             {
+                _uiManager._bossHealthSlider.gameObject.SetActive(true);
                 Vector3 bossSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
                 GameObject newBoss = Instantiate(_bossEnemyPrefab, bossSpawn, Quaternion.identity);
                 newBoss.transform.parent = _enemyContainer.transform;
                 _currentEnemies++;
-                return;
+                //return;
             }
+           
             EnableNextWaveSpawning();
             _uiManager.SpawnNextWave();
             StartEnemySpawning();
@@ -99,7 +103,7 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(SpawnPowerupRoutine());
     }
 
-    IEnumerator SpawnEnemyRoutine()
+    public IEnumerator SpawnEnemyRoutine()
     {
         yield return new WaitForSeconds(3f);
         while (_isGameActive && _spawnEnemyWave)
@@ -164,12 +168,18 @@ public class SpawnManager : MonoBehaviour
         _stopSpawning = true;
     }
 
+    public void GameOver()
+    {
+        _stopSpawning = true;
+        Debug.Log("GameOver");
+    }
+
+
     private void ChoosePowerUp()
     {
         float randomX = Random.Range(-8f, 8f);
 
         _powerupRandomNumber = Random.Range(0, _powerupTotalWeight);
-        //Debug.Log("Powerup Random Number is " + _powerupRandomNumber);
 
         for (int i = 0; i < table.Length; i++)
         {
@@ -188,7 +198,6 @@ public class SpawnManager : MonoBehaviour
     private void ChooseEnemy()
     {
         _enemyRandomNumber = Random.Range(0, _enemyTotalWeight);
-        //Debug.Log("Enemy Random Number is " + _enemyRandomNumber);
         for (int i = 0; i < enemyTable.Length; i++)
         {
             if (_enemyRandomNumber <= enemyTable[i])

@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour
     public float maxFuel = 100f;
     public float currentFuel;
     [SerializeField]
-    private Slider _bossHealthSlider;
+    public Slider _bossHealthSlider;
     private GameManager _gameManager;
     private SpawnManager _spawnManager;
 

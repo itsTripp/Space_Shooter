@@ -20,18 +20,21 @@ public class EnemyBoss : MonoBehaviour
     [SerializeField]
     private AudioClip _bossAudio;
     
-    public UIManager _bossHealthBar;
+    public UIManager _uiManager;
+    private Player _player;
+    private SpawnManager _spawnManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        _bossHealthBar = GameObject.Find("Canvas").GetComponent<UIManager>();
-        if(_bossHealthBar == null)
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        if(_uiManager == null)
         {
             Debug.LogError("UIMananger on Boss is Null");
         }
+
         _bossCurrentHealth = _bossMaxHealth;
-        _bossHealthBar.SetBossMaxHealth(_bossMaxHealth);
+        _uiManager.SetBossMaxHealth(_bossMaxHealth);
         
         _audioSource = GetComponent<AudioSource>();
         _animator = GetComponent<Animator>();
@@ -40,8 +43,20 @@ public class EnemyBoss : MonoBehaviour
         {
             Debug.LogError("Animator on Boss is Null");
         }
+
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        if(_player == null)
+        {
+            Debug.LogError("Player on Boss is Null");
+        }
+
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if(_spawnManager == null)
+        {
+            Debug.LogError("SpawnManager on Boss is Null");
+        }
+
         StartCoroutine(BossEntrance(new Vector3(0, 3f, 0)));
-        
     }
 
     // Update is called once per frame
@@ -89,13 +104,50 @@ public class EnemyBoss : MonoBehaviour
         if(other.tag == "Laser")
         {
             Destroy(other.gameObject);
+            if(_player != null)
+            {
+                _player.AddScore(10);
+            }
+            
             _bossCurrentHealth--;
-            _bossHealthBar.SetBossHealth(_bossCurrentHealth);
+            _uiManager.SetBossHealth(_bossCurrentHealth);
             if (_bossCurrentHealth == 0)
             {
+                if (_player != null)
+                {
+                    _player.AddScore(1000);
+                }
                 _animator.SetTrigger("OnEnemyDeath");
-                Destroy(gameObject);
                 _audioSource.Play();
+                _spawnManager.EnemyKilled();
+                _enemyIsAlive = false;
+                Destroy(gameObject,2.8f);
+                _uiManager._bossHealthSlider.gameObject.SetActive(false);
+            }
+        }
+        if(other.tag == "Missile")
+        {
+            Destroy(other.gameObject);
+            if(_player != null)
+            {
+                _player.AddScore(10);
+            }
+            
+            _bossCurrentHealth --;
+            _uiManager.SetBossHealth(_bossCurrentHealth);
+            if(_bossCurrentHealth == 0)
+            {
+                if (_player != null)
+                {
+                    _player.AddScore(1000);
+                }
+                _animator.SetTrigger("OnEnemyDeath");
+                _audioSource.Play();
+                _spawnManager.EnemyKilled();
+                _enemyIsAlive = false;
+                Destroy(gameObject,2.8f);
+                _uiManager._bossHealthSlider.gameObject.SetActive(false);
+                
             }
         }
     }
